@@ -1,5 +1,6 @@
 ﻿using EmployeeAPI.Services;
 using EmployeeAPI.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace EmployeeAPI.Controllers
 {
   [Route("api/employees")]
   [ApiController]
+  [Authorize("ApiScopePolicy")]
   public class EmployeeController : ControllerBase
   {
     private readonly IEmployeeService _service;

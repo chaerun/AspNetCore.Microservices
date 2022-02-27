@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using UnitAPI.Services;
@@ -8,6 +9,7 @@ namespace UnitAPI.Controllers
 {
   [Route("api/units")]
   [ApiController]
+  [Authorize("ApiScopePolicy")]
   public class UnitController : ControllerBase
   {
     private readonly IUnitService _service;
