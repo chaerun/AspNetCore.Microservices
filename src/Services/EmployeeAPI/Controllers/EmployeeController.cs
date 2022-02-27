@@ -28,8 +28,8 @@ namespace EmployeeAPI.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<EmployeeRequestDto>> GetEmployee(int id)
     {
-      var unit = await _service.GetEmployeeByIdAsync(id);
-      return Ok(unit);
+      var employee = await _service.GetEmployeeByIdAsync(id);
+      return Ok(employee);
     }
 
     [HttpPost]

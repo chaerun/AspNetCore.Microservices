@@ -48,7 +48,13 @@ namespace UnitAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.HasIndex("IsActive");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Units");
                 });

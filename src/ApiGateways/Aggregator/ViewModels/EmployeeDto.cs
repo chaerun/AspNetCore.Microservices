@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace EmployeeAPI.Models
+namespace Aggregator.ViewModels
 {
-  public class Employee
+  public class EmployeeDto
   {
     public int Id { get; set; }
     public string Name { get; set; }

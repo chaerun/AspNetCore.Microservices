@@ -15,6 +15,8 @@ namespace UnitAPI.Models
       builder.Property(e => e.CreatedAt).IsRequired();
       builder.Property(e => e.IsActive);
 
+      builder.HasIndex(e => e.Name).IsUnique();
+      builder.HasIndex(e => e.Code).IsUnique();
       builder.HasIndex(e => e.IsActive);
 
       // Global query filter for soft delete

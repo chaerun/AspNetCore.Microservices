@@ -41,9 +41,15 @@ namespace EmployeeAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("UnitId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IsActive");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });

@@ -28,6 +28,19 @@
     },
     //EmployeeAPI
     {
+      "DownstreamPathTemplate": "/api/employee-details",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/employees",
+      "UpstreamHttpMethod": [ "GET" ],
+      "FileCacheOptions": { "TtlSeconds": 30 }
+    },
+    {
       "DownstreamPathTemplate": "/api/employees",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -37,8 +50,19 @@
         }
       ],
       "UpstreamPathTemplate": "/employees",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
-      "FileCacheOptions": { "TtlSeconds": 30 }
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/employee-details/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/employees/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
     },
     {
       "DownstreamPathTemplate": "/api/employees/{id}",
@@ -50,7 +74,7 @@
         }
       ],
       "UpstreamPathTemplate": "/employees/{id}",
-      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+      "UpstreamHttpMethod": [ "DELETE" ]
     }
   ],
   "GlobalConfiguration": {

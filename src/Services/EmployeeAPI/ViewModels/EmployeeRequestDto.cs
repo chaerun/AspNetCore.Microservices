@@ -6,5 +6,7 @@ namespace EmployeeAPI.ViewModels
   {
     [Required]
     public string Name { get; set; }
+    [Required]
+    public int UnitId { get; set; }
   }
 }

@@ -16,6 +16,12 @@ services:
       context: .
       dockerfile: Services/EmployeeAPI/Dockerfile
 
+  aggregator:
+    image: ${DOCKER_REGISTRY-demo}/aggregator:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: ApiGateways/Aggregator/Dockerfile
+
   ocelotapigw:
     image: ${DOCKER_REGISTRY-demo}/ocelotapigw:${PLATFORM:-linux}-${TAG:-latest}
     build:
