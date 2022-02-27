@@ -6,16 +6,16 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["Services/Unit/UnitAPI/UnitAPI.csproj", "Services/Unit/UnitAPI/"]
-RUN dotnet restore "Services/Unit/UnitAPI/UnitAPI.csproj"
+COPY ["ApiGateways/OcelotApiGw/OcelotApiGw.csproj", "ApiGateways/OcelotApiGw/"]
+RUN dotnet restore "ApiGateways/OcelotApiGw/OcelotApiGw.csproj"
 COPY . .
-WORKDIR "/src/Services/Unit/UnitAPI"
-RUN dotnet build "UnitAPI.csproj" -c Release -o /app/build
+WORKDIR "/src/ApiGateways/OcelotApiGw"
+RUN dotnet build "OcelotApiGw.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "UnitAPI.csproj" -c Release -o /app/publish
+RUN dotnet publish "OcelotApiGw.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "UnitAPI.dll"]
+ENTRYPOINT ["dotnet", "OcelotApiGw.dll"]

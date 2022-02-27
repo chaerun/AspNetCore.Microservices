@@ -5,10 +5,22 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
 
   unit-api:
-    image: ${DOCKER_REGISTRY-demo}/unit.api:${PLATFORM:-linux}-${TAG:-latest}
+    image: ${DOCKER_REGISTRY-demo}/unit-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/Unit/UnitAPI/Dockerfile
+      dockerfile: Services/UnitAPI/Dockerfile
+
+  employee-api:
+    image: ${DOCKER_REGISTRY-demo}/employee-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/EmployeeAPI/Dockerfile
+
+  ocelotapigw:
+    image: ${DOCKER_REGISTRY-demo}/ocelotapigw:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: ApiGateways/OcelotApiGw/Dockerfile
 
 networks:
   demo:

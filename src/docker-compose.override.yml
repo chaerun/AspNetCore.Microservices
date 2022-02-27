@@ -21,8 +21,32 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings:SqlConnection=Server=mssql;Database=Microservices.Demo.UnitDb;User Id=sa;Password=P@ssw0rd;
     ports:
-      - "5080:80"
+      - "5001:80"
     networks:
       - demo
     depends_on:
       - mssql
+
+  employee-api:
+    container_name: employee-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings:SqlConnection=Server=mssql;Database=Microservices.Demo.EmployeeDb;User Id=sa;Password=P@ssw0rd;
+    ports:
+      - "5002:80"
+    networks:
+      - demo
+    depends_on:
+      - mssql
+
+  ocelotapigw:
+    container_name: ocelotapigw
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5000:80"
+    networks:
+      - demo
+    depends_on:
+      - unit-api
+      - employee-api
