@@ -2,9 +2,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
-using UnitAPI.Models;
 
-namespace UnitAPI
+namespace IdentityAPI
 {
   public class Program
   {
@@ -16,10 +15,7 @@ namespace UnitAPI
         .WriteTo.Console()
         .CreateBootstrapLogger();
 
-      CreateHostBuilder(args)
-        .Build()
-        .MigrateDatabase<ApplicationDbContext>()
-        .Run();
+      CreateHostBuilder(args).Build().Run();
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>
