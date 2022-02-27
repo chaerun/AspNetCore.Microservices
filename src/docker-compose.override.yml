@@ -20,6 +20,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings:SqlConnection=Server=mssql;Database=Microservices.Demo.UnitDb;User Id=sa;Password=P@ssw0rd;
+      - IdentityServerUrl=http://identity-api
     ports:
       - "5001:80"
     networks:
@@ -32,6 +33,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings:SqlConnection=Server=mssql;Database=Microservices.Demo.EmployeeDb;User Id=sa;Password=P@ssw0rd;
+      - IdentityServerUrl=http://identity-api
     ports:
       - "5002:80"
     networks:
@@ -63,3 +65,12 @@ services:
       - unit-api
       - employee-api
       - aggregator
+
+  identity-api:
+    container_name: identity-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5005:80"
+    networks:
+      - demo

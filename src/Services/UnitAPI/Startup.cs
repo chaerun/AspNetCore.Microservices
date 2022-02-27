@@ -44,7 +44,8 @@ namespace UnitAPI
           options.RequireHttpsMetadata = false;
           options.TokenValidationParameters = new TokenValidationParameters
           {
-            ValidateAudience = false
+            ValidateAudience = false,
+            ValidateIssuer = false
           };
         });
 
