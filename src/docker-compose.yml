@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  sqldata:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+
+  unit-api:
+    image: ${DOCKER_REGISTRY-demo}/unit.api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Unit/UnitAPI/Dockerfile
+
+networks:
+  demo:
+
+volumes:
+  mssql-data:
+    external: false

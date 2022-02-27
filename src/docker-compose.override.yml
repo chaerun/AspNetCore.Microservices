@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  sqldata:
+    container_name: mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=P@ssw0rd
+      - MSSQL_PID=Express
+    ports:
+      - "5433:1433"
+    networks:
+      - demo
+    volumes:
+      - mssql-data:/var/opt/mssql
+    restart: always
+
+  unit-api:
+    container_name: unit-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings:SqlConnection=Server=mssql;Database=Microservices.Demo.UnitDb;User Id=sa;Password=P@ssw0rd;
+    ports:
+      - "5080:80"
+    networks:
+      - demo
+    depends_on:
+      - mssql
