@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Net.Http.Headers;
 using System;
 using System.Net.Mime;
 using WebApp.HttpHandlers;
@@ -34,7 +34,7 @@ namespace WebApp
       {
         client.BaseAddress = new Uri(Configuration["OcelotApiGw"]);
         client.DefaultRequestHeaders.Clear();
-        client.DefaultRequestHeaders.Add(HeaderNames.Accept, MediaTypeNames.Application.Json);
+        client.DefaultRequestHeaders.Add(Microsoft.Net.Http.Headers.HeaderNames.Accept, MediaTypeNames.Application.Json);
       }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
       services.AddHttpContextAccessor();
@@ -48,6 +48,7 @@ namespace WebApp
         .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
         {
           options.Authority = Configuration["IdentityServerUrl"];
+          options.RequireHttpsMetadata = false;
 
           options.ClientId = "web.client";
           options.ClientSecret = "secret";
@@ -76,7 +77,7 @@ namespace WebApp
       }
 
       app.UseStaticFiles();
-      app.UseHttpsRedirection();
+      app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
       app.UseRouting();
       app.UseAuthentication();
       app.UseAuthorization();

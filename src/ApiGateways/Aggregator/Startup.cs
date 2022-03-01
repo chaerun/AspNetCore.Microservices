@@ -59,6 +59,7 @@ namespace Aggregator
         .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
         {
           options.Authority = Configuration["IdentityServerUrl"];
+          options.RequireHttpsMetadata = false;
           options.TokenValidationParameters = new TokenValidationParameters
           {
             ValidateAudience = false,
@@ -88,8 +89,8 @@ namespace Aggregator
           "HTTP {RequestMethod} {RequestPath} from {ClientIp} ({ClientAgent}) responded {StatusCode} in {Elapsed:0.0000} ms";
       });
 
-      app.UseHttpsRedirection();
       app.UseRouting();
+      app.UseAuthentication();
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>

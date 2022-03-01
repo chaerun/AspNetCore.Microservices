@@ -20,7 +20,6 @@ namespace Aggregator.Services
 
       var request = new HttpRequestMessage(HttpMethod.Get, $"/api/units/{id}");
       var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-      response.EnsureSuccessStatusCode();
 
       return await response.ReadContentAs<UnitDto>();
     }
@@ -31,7 +30,6 @@ namespace Aggregator.Services
 
       var request = new HttpRequestMessage(HttpMethod.Get, "/api/units");
       var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-      response.EnsureSuccessStatusCode();
 
       return await response.ReadContentAs<PagedList<UnitDto>>();
     }

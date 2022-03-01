@@ -3,11 +3,11 @@
     //UnitAPI
     {
       "DownstreamPathTemplate": "/api/units",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "unit-api",
-          "Port": "443"
+          "Port": "80"
         }
       ],
       "UpstreamPathTemplate": "/units",
@@ -19,11 +19,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/units/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "unit-api",
-          "Port": "443"
+          "Port": "80"
         }
       ],
       "UpstreamPathTemplate": "/units/{id}",
@@ -36,11 +36,11 @@
     //EmployeeAPI
     {
       "DownstreamPathTemplate": "/api/employee-details",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "aggregator",
-          "Port": "443"
+          "Port": "80"
         }
       ],
       "UpstreamPathTemplate": "/employees",
@@ -52,11 +52,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/employees",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "employee-api",
-          "Port": "443"
+          "Port": "80"
         }
       ],
       "UpstreamPathTemplate": "/employees",
@@ -68,11 +68,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/employee-details/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "aggregator",
-          "Port": "443"
+          "Port": "80"
         }
       ],
       "UpstreamPathTemplate": "/employees/{id}",
@@ -84,11 +84,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/employees/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "employee-api",
-          "Port": "443"
+          "Port": "80"
         }
       ],
       "UpstreamPathTemplate": "/employees/{id}",
@@ -100,6 +100,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://ocelotapigw"
+    "BaseUrl": "http://ocelotapigw"
   }
 }

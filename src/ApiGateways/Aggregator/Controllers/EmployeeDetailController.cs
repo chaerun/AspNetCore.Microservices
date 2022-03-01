@@ -1,6 +1,7 @@
 ﻿using Aggregator.Services;
 using Aggregator.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace Aggregator.Controllers
 {
   [Route("api/employee-details")]
   [ApiController]
+  [Authorize]
   public class EmployeeDetailController : ControllerBase
   {
     private readonly IUnitService _unitService;

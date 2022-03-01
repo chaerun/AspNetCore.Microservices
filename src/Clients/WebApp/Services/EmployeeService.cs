@@ -43,7 +43,7 @@ namespace WebApp.Services
     {
       var httpClient = _clientFactory.CreateClient("web.client");
 
-      var request = new HttpRequestMessage(HttpMethod.Get, $"/units/{id}");
+      var request = new HttpRequestMessage(HttpMethod.Get, $"/employees/{id}");
       var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
       var content = await response.Content.ReadAsStringAsync();
@@ -67,7 +67,7 @@ namespace WebApp.Services
     {
       var httpClient = _clientFactory.CreateClient("web.client");
 
-      var request = new HttpRequestMessage(HttpMethod.Put, $"/units/{id}");
+      var request = new HttpRequestMessage(HttpMethod.Put, $"/employees/{id}");
       var json = JsonConvert.SerializeObject(dto);
       request.Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
 
