@@ -41,7 +41,6 @@ namespace EmployeeAPI
         .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
         {
           options.Authority = Configuration["IdentityServerUrl"];
-          options.RequireHttpsMetadata = false;
           options.TokenValidationParameters = new TokenValidationParameters
           {
             ValidateAudience = false,
@@ -51,7 +50,7 @@ namespace EmployeeAPI
 
       services.AddAuthorization(options =>
       {
-        options.AddPolicy("ApiScopePolicy", policy => policy.RequireClaim("scope", "unit.api"));
+        options.AddPolicy("ApiScopePolicy", policy => policy.RequireClaim("scope", "employee.api"));
       });
     }
 
@@ -65,8 +64,8 @@ namespace EmployeeAPI
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeAPI v1"));
       }
 
+      app.UseHttpsRedirection();
       app.UseRouting();
-
       app.UseAuthentication();
       app.UseAuthorization();
 

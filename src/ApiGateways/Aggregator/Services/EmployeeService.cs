@@ -7,22 +7,32 @@ namespace Aggregator.Services
 {
   public class EmployeeService : IEmployeeService
   {
-    private readonly HttpClient _client;
+    private readonly IHttpClientFactory _clientFactory;
 
-    public EmployeeService(HttpClient client)
+    public EmployeeService(IHttpClientFactory clientFactory)
     {
-      _client = client;
+      _clientFactory = clientFactory;
     }
 
     public async Task<EmployeeDto> GetEmployeeByIdAsync(int id)
     {
-      var response = await _client.GetAsync($"/api/employees/{id}");
+      var httpClient = _clientFactory.CreateClient("employee.client");
+
+      var request = new HttpRequestMessage(HttpMethod.Get, $"/api/employees/{id}");
+      var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      response.EnsureSuccessStatusCode();
+
       return await response.ReadContentAs<EmployeeDto>();
     }
 
     public async Task<PagedList<EmployeeDto>> GetEmployeesAsync()
     {
-      var response = await _client.GetAsync("/api/employees");
+      var httpClient = _clientFactory.CreateClient("employee.client");
+
+      var request = new HttpRequestMessage(HttpMethod.Get, "/api/employees");
+      var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      response.EnsureSuccessStatusCode();
+
       return await response.ReadContentAs<PagedList<EmployeeDto>>();
     }
   }

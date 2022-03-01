@@ -7,22 +7,32 @@ namespace Aggregator.Services
 {
   public class UnitService : IUnitService
   {
-    private readonly HttpClient _client;
+    private readonly IHttpClientFactory _clientFactory;
 
-    public UnitService(HttpClient client)
+    public UnitService(IHttpClientFactory clientFactory)
     {
-      _client = client;
+      _clientFactory = clientFactory;
     }
 
     public async Task<UnitDto> GetUnitByIdAsync(int id)
     {
-      var response = await _client.GetAsync($"/api/units/{id}");
+      var httpClient = _clientFactory.CreateClient("unit.client");
+
+      var request = new HttpRequestMessage(HttpMethod.Get, $"/api/units/{id}");
+      var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      response.EnsureSuccessStatusCode();
+
       return await response.ReadContentAs<UnitDto>();
     }
 
     public async Task<PagedList<UnitDto>> GetUnitsAsync()
     {
-      var response = await _client.GetAsync("/api/units");
+      var httpClient = _clientFactory.CreateClient("unit.client");
+
+      var request = new HttpRequestMessage(HttpMethod.Get, "/api/units");
+      var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      response.EnsureSuccessStatusCode();
+
       return await response.ReadContentAs<PagedList<UnitDto>>();
     }
   }

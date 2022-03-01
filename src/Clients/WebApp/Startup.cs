@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using System;
+using System.Net.Mime;
+using WebApp.HttpHandlers;
 using WebApp.Services;
 
 namespace WebApp
@@ -20,9 +25,42 @@ namespace WebApp
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddControllersWithViews();
-      services.AddHttpClient<IUnitService, UnitService>(c => c.BaseAddress = new Uri(Configuration["ApiSettings:UnitUrl"]));
-      services.AddHttpClient<IEmployeeService, EmployeeService>(c => c.BaseAddress = new Uri(Configuration["ApiSettings:EmployeeUrl"]));
+      services.AddControllersWithViews().AddRazorRuntimeCompilation();
+      services.AddScoped<IUnitService, UnitService>();
+      services.AddScoped<IEmployeeService, EmployeeService>();
+      services.AddTransient<AuthenticationDelegatingHandler>();
+
+      services.AddHttpClient("web.client", client =>
+      {
+        client.BaseAddress = new Uri(Configuration["OcelotApiGw"]);
+        client.DefaultRequestHeaders.Clear();
+        client.DefaultRequestHeaders.Add(HeaderNames.Accept, MediaTypeNames.Application.Json);
+      }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
+
+      services.AddHttpContextAccessor();
+
+      services.AddAuthentication(options =>
+      {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+      })
+        .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+        {
+          options.Authority = Configuration["IdentityServerUrl"];
+
+          options.ClientId = "web.client";
+          options.ClientSecret = "secret";
+          options.ResponseType = "code";
+
+          options.Scope.Add("openid");
+          options.Scope.Add("profile");
+          options.Scope.Add("unit.api");
+          options.Scope.Add("employee.api");
+
+          options.SaveTokens = true;
+          options.GetClaimsFromUserInfoEndpoint = true;
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,17 +74,18 @@ namespace WebApp
       {
         app.UseExceptionHandler("/Home/Error");
       }
+
       app.UseStaticFiles();
-
+      app.UseHttpsRedirection();
       app.UseRouting();
-
+      app.UseAuthentication();
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllerRoute(
-                  name: "default",
-                  pattern: "{controller=Home}/{action=Index}/{id?}");
+          name: "default",
+          pattern: "{controller=Home}/{action=Index}/{id?}");
       });
     }
   }

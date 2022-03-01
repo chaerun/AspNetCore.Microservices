@@ -28,11 +28,17 @@ services:
       context: .
       dockerfile: ApiGateways/OcelotApiGw/Dockerfile
 
-  identity-api:
-    image: ${DOCKER_REGISTRY-demo}/identity-api:${PLATFORM:-linux}-${TAG:-latest}
+  identityserver:
+    image: ${DOCKER_REGISTRY-demo}/identityserver:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/IdentityAPI/Dockerfile
+      dockerfile: Services/IdentityServer/Dockerfile
+
+  webapp:
+    image: ${DOCKER_REGISTRY-demo}/webapp:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Clients/WebApp/Dockerfile
 
 networks:
   demo:

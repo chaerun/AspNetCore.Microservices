@@ -18,24 +18,35 @@ services:
   unit-api:
     container_name: unit-api
     environment:
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=5051
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Development__Password=P@ssw0rd
       - ConnectionStrings:SqlConnection=Server=mssql;Database=Microservices.Demo.UnitDb;User Id=sa;Password=P@ssw0rd;
-      - IdentityServerUrl=http://identity-api
+      - IdentityServerUrl=https://identity-api
     ports:
       - "5001:80"
+      - "5051:443"
     networks:
       - demo
+    volumes:
+      - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+      - ${HOME}/.aspnet/https:/root/.aspnet/https/
     depends_on:
       - mssql
 
   employee-api:
     container_name: employee-api
     environment:
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=5052
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Development__Password=P@ssw0rd
       - ConnectionStrings:SqlConnection=Server=mssql;Database=Microservices.Demo.EmployeeDb;User Id=sa;Password=P@ssw0rd;
-      - IdentityServerUrl=http://identity-api
+      - IdentityServerUrl=https://identity-api
     ports:
       - "5002:80"
+      - "5052:443"
     networks:
       - demo
     depends_on:
@@ -44,9 +55,14 @@ services:
   aggregator:
     container_name: aggregator
     environment:
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=5053
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Development__Password=P@ssw0rd
+      - IdentityServerUrl=https://identity-api
     ports:
       - "5003:80"
+      - "5053:443"
     networks:
       - demo
     depends_on:
@@ -56,9 +72,14 @@ services:
   ocelotapigw:
     container_name: ocelotapigw
     environment:
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=5050
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Development__Password=P@ssw0rd
+      - IdentityServerUrl=https://identity-api
     ports:
       - "5000:80"
+      - "5050:443"
     networks:
       - demo
     depends_on:
@@ -66,11 +87,36 @@ services:
       - employee-api
       - aggregator
 
-  identity-api:
-    container_name: identity-api
+  identityserver:
+    container_name: identityserver
     environment:
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=5055
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Development__Password=P@ssw0rd
+      - WebAppSettings:RedirectUrl=https://webapp/signin-oidc
+      - WebAppSettings:PostLogoutRedirectUrl=https://webapp/signout-callback-oidc
+
     ports:
       - "5005:80"
+      - "5055:443"
     networks:
       - demo
+
+  webapp:
+    container_name: webapp
+    environment:
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=8080
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Development__Password=P@ssw0rd
+      - IdentityServerUrl=https://identity-api
+      - OcelotApiGw=https://ocelotapigw
+    ports:
+      - "8000:80"
+      - "8080:443"
+    networks:
+      - demo
+    depends_on:
+      - unit-api
+      - employee-api

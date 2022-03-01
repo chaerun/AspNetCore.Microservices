@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+  [Authorize]
   public class HomeController : Controller
   {
     private readonly ILogger<HomeController> _logger;
@@ -22,6 +28,12 @@ namespace WebApp.Controllers
     public IActionResult Privacy()
     {
       return View();
+    }
+
+    public async Task Logout()
+    {
+      await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+      await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

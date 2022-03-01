@@ -1,23 +1,42 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Threading.Tasks;
 using WebApp.Models;
 using WebApp.Services;
 
 namespace WebApp.Controllers
 {
+  [Authorize]
   public class UnitController : Controller
   {
     private readonly IUnitService _service;
+    private readonly ILogger _logger;
 
-    public UnitController(IUnitService service)
+    public UnitController(IUnitService service, ILogger<UnitController> logger)
     {
       _service = service;
+      _logger = logger;
     }
 
     // GET: Unit
     public async Task<IActionResult> Index()
     {
+      await LogTokenAndClaims();
       return View(await _service.GetUnitsAsync());
+    }
+
+    public async Task LogTokenAndClaims()
+    {
+      var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+      _logger.LogInformation($"Identity token: {identityToken}", identityToken);
+
+      foreach (var claim in User.Claims)
+      {
+        _logger.LogInformation($"Claim type: {claim.Type} - Claim value: {claim.Value}");
+      }
     }
 
     // GET: Unit/Details/5
