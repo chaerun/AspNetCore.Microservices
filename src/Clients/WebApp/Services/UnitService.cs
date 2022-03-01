@@ -26,6 +26,7 @@ namespace WebApp.Services
       request.Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
 
       var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      response.EnsureSuccessStatusCode();
 
       var content = await response.Content.ReadAsStringAsync();
       return JsonConvert.DeserializeObject<Unit>(content);
@@ -36,7 +37,8 @@ namespace WebApp.Services
       var httpClient = _clientFactory.CreateClient("web.client");
 
       var request = new HttpRequestMessage(HttpMethod.Delete, $"/units/{id}");
-      await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      response.EnsureSuccessStatusCode();
     }
 
     public async Task<Unit> GetUnitByIdAsync(int id)
@@ -45,6 +47,7 @@ namespace WebApp.Services
 
       var request = new HttpRequestMessage(HttpMethod.Get, $"/units/{id}");
       var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      response.EnsureSuccessStatusCode();
 
       var content = await response.Content.ReadAsStringAsync();
       return JsonConvert.DeserializeObject<Unit>(content);
@@ -56,6 +59,7 @@ namespace WebApp.Services
 
       var request = new HttpRequestMessage(HttpMethod.Get, "/units");
       var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      response.EnsureSuccessStatusCode();
 
       var content = await response.Content.ReadAsStringAsync();
       var units = JsonConvert.DeserializeObject<PagedList<Unit>>(content);
@@ -72,6 +76,7 @@ namespace WebApp.Services
       request.Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
 
       var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+      response.EnsureSuccessStatusCode();
 
       var content = await response.Content.ReadAsStringAsync();
       return JsonConvert.DeserializeObject<Unit>(content);

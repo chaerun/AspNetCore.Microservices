@@ -37,7 +37,7 @@ namespace Aggregator.Controllers
         (employee, unitList) =>
         {
           var response = _mapper.Map<EmployeeResponseModel>(employee);
-          response.Unit = unitList.FirstOrDefault(u => u.Id == employee.Id);
+          response.Unit = unitList.FirstOrDefault(u => u.Id == employee.UnitId);
           return response;
         });
 

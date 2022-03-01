@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApp.Models;
 using WebApp.Services;
@@ -11,11 +13,13 @@ namespace WebApp.Controllers
   public class EmployeeController : Controller
   {
     private readonly IEmployeeService _service;
+    private readonly IUnitService _unitService;
     private readonly ILogger _logger;
 
-    public EmployeeController(IEmployeeService service, ILogger<EmployeeController> logger)
+    public EmployeeController(IEmployeeService service, IUnitService unitService, ILogger<EmployeeController> logger)
     {
       _service = service;
+      _unitService = unitService;
       _logger = logger;
     }
 
@@ -24,6 +28,19 @@ namespace WebApp.Controllers
     {
       await LogTokenAndClaims();
       return View(await _service.GetEmployeesAsync());
+    }
+
+    private async Task<List<SelectListItem>> GetUnitItems()
+    {
+      var units = await _unitService.GetUnitsAsync();
+      var unitItems = new List<SelectListItem>();
+
+      foreach (var unit in units)
+      {
+        unitItems.Add(new SelectListItem { Value = unit.Id.ToString(), Text = unit.Name });
+      }
+
+      return unitItems;
     }
 
     public async Task LogTokenAndClaims()
@@ -55,8 +72,9 @@ namespace WebApp.Controllers
     }
 
     // GET: Employee/Create
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+      ViewBag.units = await GetUnitItems();
       return View();
     }
 
@@ -65,7 +83,7 @@ namespace WebApp.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,CreatedBy,CreatedAt,IsActive")] Employee employee)
+    public async Task<IActionResult> Create([Bind("Id,Name,UnitId,CreatedBy,CreatedAt,IsActive")] Employee employee)
     {
       if (ModelState.IsValid)
       {
@@ -88,6 +106,8 @@ namespace WebApp.Controllers
       {
         return NotFound();
       }
+
+      ViewBag.units = await GetUnitItems();
       return View(employee);
     }
 
@@ -96,7 +116,7 @@ namespace WebApp.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedBy,CreatedAt,IsActive")] Employee employee)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,UnitId,CreatedBy,CreatedAt,IsActive")] Employee employee)
     {
       if (id != employee.Id)
       {

@@ -10,6 +10,9 @@ namespace WebApp.Models
     [Required]
     public string Name { get; set; }
 
+    [Required]
+    public int UnitId { get; set; }
+
     public Unit Unit { get; set; }
     public string CreatedBy { get; set; }
     public DateTime CreatedAt { get; set; }
