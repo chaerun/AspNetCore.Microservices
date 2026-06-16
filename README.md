@@ -1,2 +1,2 @@
 # AspNetCore.Microservices
-ASP.NET Core 5 Microservices Demo
+ASP.NET 6 Microservices Demo
